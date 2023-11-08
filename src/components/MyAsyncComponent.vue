@@ -4,7 +4,7 @@
 
 <script lang="ts">
 
-import { GraphQLClient, request, gql } from 'graphql-request'
+import { request, gql } from 'graphql-request'
 import { ref } from 'vue'
 
 export default {
@@ -12,15 +12,15 @@ export default {
     name: 'MyAsyncComponent',
     async setup() {
         const document = gql`
-  {
-    visitors {
-          id
-      }
-  }
-`
-        const endpoint = 'https://graphql.bubble.chat:8081/'
+        {
+            visitors {
+                id
+            }
+        }
+    `
+        // const endpoint = 'https://graphql.bubble.chat:8081/'
 
-        const result = await request('https://graphql.bubble.chat:8081/', document)
+        // const result = await request('https://graphql.bubble.chat:8081/', document)
 
         // const client = new GraphQLClient(endpoint)
         // const result = await client.request(document)

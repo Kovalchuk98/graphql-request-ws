@@ -1,26 +1,46 @@
 <script setup lang="ts">
+import { createClient } from 'graphql-ws';
 import MyAsyncComponent from './components/MyAsyncComponent.vue';
 
-// import { GraphQLClient, request, gql } from 'graphql-request'
-// import { ref } from 'vue';
+import { gql } from 'graphql-request'
+import { ref } from 'vue';
 
-// const result = ref<any>(null)
+const responseData = ref<any>(null)
 
-// const document = gql`
-//   {
-//     visitors {
-//           id
-//       }
-//   }
-// `
-
-// const endpoint = 'https://graphql.bubble.chat:8081/'
-
-// //  const result = await request('https://graphql.bubble.chat:8081/', document)
-
-// const client = new GraphQLClient(endpoint)
-// const result = await client.request(document)
-
+const document = gql`
+      subscription onMessageAdded {
+        messageNew {
+        id
+        text
+        dialog {
+          id
+          visitor {
+            id
+          }
+          }
+        }
+      }
+    `
+ 
+const client = createClient({
+  url: 'wss://graphql.bubble.chat:8081/',
+});
+ 
+(async () => {
+  const query = client.iterate({
+    query: document,
+  });
+ 
+  try {
+    const { value } = await query.next();
+    responseData.value = value.data
+    console.log(value);
+    // next = value = { data: { hello: 'Hello World!' } }
+    // complete
+  } catch (err) {
+    // error
+  }
+})();
 </script>
 
 <template>
@@ -34,15 +54,16 @@ import MyAsyncComponent from './components/MyAsyncComponent.vue';
   <div>
     <Suspense>
    <template #default>
-    <!-- {{ result }} -->
-    <MyAsyncComponent />
-   </template>
-   <template #fallback>
-     <span>Loading...</span>
-   </template>
- </Suspense>
+     <MyAsyncComponent />
+    </template>
+    <template #fallback>
+      <span>Loading...</span>
+    </template>
+  </Suspense>
+</div>
+<div>
+  {{ responseData }}
   </div>
-
   <main>
     <TheWelcome />
   </main>

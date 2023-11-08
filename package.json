@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "graphql-request": "^6.1.0",
+    "graphql-ws": "^5.14.2",
     "pinia": "^2.1.7",
     "rollup-plugin-visualizer": "^5.9.2",
     "vue": "^3.3.4"
